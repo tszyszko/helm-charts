@@ -1,0 +1,88 @@
+apiVersion: v1
+entries:
+  php:
+  - annotations:
+      artifacthub.io/changes: |
+        - Upgrade base image to v8 with PHP 8.4
+      artifacthub.io/images: |
+        - name: PHP 8.2
+          image: qonstrukt/php:8.2-v8-apache
+          platforms:
+            - linux/amd64
+            - linux/arm64
+        - name: PHP 8.3
+          image: qonstrukt/php:8.3-v8-apache
+          platforms:
+            - linux/amd64
+            - linux/arm64
+        - name: PHP 8.4
+          image: qonstrukt/php:8.4-v8-apache
+          platforms:
+            - linux/amd64
+            - linux/arm64
+    apiVersion: v2
+    appVersion: 8.4-v8-apache
+    created: "2025-07-11T17:06:35.788482264Z"
+    description: A Helm Chart for a generic PHP application
+    digest: ce083c73daa39b95ee4306e34713780c2a7226040e91ba77bc4219b1b22c81ef
+    home: https://github.com/Qonstrukt/helm-charts/tree/main/charts/php
+    icon: https://www.php.net/favicon-196x196.png
+    keywords:
+    - php
+    - apache
+    - nginx
+    - cli
+    - node
+    - yarn
+    - composer
+    maintainers:
+    - email: stefan@qonstrukt.nl
+      name: Stefan Moonen
+      url: https://qonstrukt.nl
+    name: php
+    type: application
+    urls:
+    - https://github.com/tszyszko/helm-charts/releases/download/php-0.2.0/php-0.2.0.tgz
+    version: 0.2.0
+  unifi-controller:
+  - annotations:
+      artifacthub.io/changes: |
+        - Migrate from deprecated linuxserver/unifi-controller to linuxserver/unifi-network-application
+        - Add MongoDB 8 support as external database
+        - Update environment variables for new image
+        - Breaking change: requires external MongoDB database
+      artifacthub.io/images: |
+        - name: unifi-network-application
+          image: linuxserver/unifi-network-application:9.2.87
+          platforms:
+            - linux/amd64
+            - linux/arm64
+        - name: mongodb
+          image: mongo:8.0
+          platforms:
+            - linux/amd64
+            - linux/arm64
+    apiVersion: v2
+    appVersion: 9.2.87
+    created: "2025-07-11T17:06:35.909957648Z"
+    description: A Helm Chart for deploying a UniFi Network Application to Kubernetes
+      with MongoDB 8
+    digest: 03e3ede4c3174498e8e15df9c570d51a64ad2788370db94296993c93d5757d7e
+    home: https://github.com/Qonstrukt/helm-charts/tree/main/charts/unifi-controller
+    icon: https://assets-global.website-files.net/622b70d8906c7ab0c03f77f8/63b40a92093c6b2f3767e4e6_tMCv8T-y_400x400.png
+    keywords:
+    - unifi
+    - controller
+    - network-application
+    - ubiquiti
+    - mongodb
+    maintainers:
+    - email: stefan@qonstrukt.nl
+      name: Stefan Moonen
+      url: https://qonstrukt.nl
+    name: unifi-controller
+    type: application
+    urls:
+    - https://github.com/tszyszko/helm-charts/releases/download/unifi-controller-3.0.0/unifi-controller-3.0.0.tgz
+    version: 3.0.0
+generated: "2025-07-11T17:06:35.909963559Z"
