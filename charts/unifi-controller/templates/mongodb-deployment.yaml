@@ -1,0 +1,81 @@
+{{- if .Values.mongodb.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "unifi.fullname" . }}-mongodb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifi.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "unifi.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: mongodb
+  template:
+    metadata:
+      labels:
+        {{- include "unifi.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
+          env:
+          {{- if .Values.mongodb.auth.enabled }}
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: {{ .Values.mongodb.auth.rootUsername }}
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            value: {{ .Values.mongodb.auth.rootPassword }}
+          - name: MONGO_USER
+            value: {{ .Values.mongodb.auth.username }}
+          - name: MONGO_PASS
+            value: {{ .Values.mongodb.auth.password }}
+          - name: MONGO_DBNAME
+            value: {{ .Values.mongodb.auth.database }}
+          - name: MONGO_AUTHSOURCE
+            value: admin
+          {{- end }}
+          ports:
+          - containerPort: 27017
+            name: mongodb
+            protocol: TCP
+          resources:
+            {{- toYaml .Values.mongodb.resources | nindent 12 }}
+          volumeMounts:
+          - name: mongodb-data
+            mountPath: /data/db
+          {{- if .Values.mongodb.auth.enabled }}
+          - name: mongodb-init
+            mountPath: /docker-entrypoint-initdb.d/init-mongo.sh
+            subPath: init-mongo.sh
+            readOnly: true
+          {{- end }}
+          livenessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+      {{- if .Values.mongodb.persistence.enabled }}
+      - name: mongodb-data
+        persistentVolumeClaim:
+          claimName: {{ include "unifi.fullname" . }}-mongodb-data
+      {{- else }}
+      - name: mongodb-data
+        emptyDir: {}
+      {{- end }}
+      {{- if .Values.mongodb.auth.enabled }}
+      - name: mongodb-init
+        configMap:
+          name: {{ include "unifi.fullname" . }}-mongodb-init
+          defaultMode: 0755
+      {{- end }}
+{{- end }} 

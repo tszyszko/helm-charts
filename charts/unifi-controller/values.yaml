@@ -1,5 +1,5 @@
 image:
-  repository: linuxserver/unifi-controller
+  repository: linuxserver/unifi-network-application
   pullPolicy: IfNotPresent
   tag: 
 
@@ -14,12 +14,47 @@ serviceAccount:
   annotations: {}
   name: ""
 
+# MongoDB configuration for UniFi Network Application
+mongodb:
+  enabled: true
+  image:
+    repository: mongo
+    tag: "8.0"
+    pullPolicy: IfNotPresent
+  auth:
+    enabled: true
+    rootUsername: root
+    rootPassword: ""  # Set this in your values
+    username: unifi
+    password: ""      # Set this in your values
+    database: unifi
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClass: ""
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+
+# UniFi Network Application environment configuration
 environment:
   timezone: "Europe/Berlin"
   uid: 1000
   gid: 1000
   memLimit: 1920    # Keep this a little below the resource limits
-  memStartup: 1024  # Set this rougly to the resource requests
+  memStartup: 1024  # Set this roughly to the resource requests
+  # MongoDB connection details (automatically configured if mongodb.enabled is true)
+  mongoUser: unifi
+  mongoPass: ""     # Set this to match mongodb.auth.password
+  mongoHost: ""     # Automatically set to release-name-mongodb if mongodb.enabled is true
+  mongoPort: 27017
+  mongoDbName: unifi
+  mongoAuthSource: admin
+  mongoTls: ""      # Set to "true" to enable TLS
 
 service:
   type: "LoadBalancer"
@@ -48,13 +83,12 @@ ingress:
   #    hosts:
   #      - unifi.speedport.ip
 
-
-# if set, use this persistant volume claim for the internal mongodb
+# UniFi application data persistence
 persistence:
   enabled: true
   accessMode: ReadWriteOnce 
   size: 8Gi 
-  ## database data Persistent Volume Storage Class
+  ## UniFi data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   storageClass: local-path-retain
@@ -63,13 +97,11 @@ persistence:
     enabled: true
     accessMode: ReadWriteOnce 
     size: 8Gi 
-    ## database data Persistent Volume Storage Class
+    ## UniFi backup data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
     storageClass: local-path-retain
     annotations: {}
-
-
 
 podSecurityContext: {}
   # runAsUser: 999
@@ -90,7 +122,6 @@ resources:
   requests:
     cpu: 250m
     memory: 1Gi
-
 
 nodeSelector: {}
   #unifi-controller/enabled: "true"          

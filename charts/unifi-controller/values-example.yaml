@@ -1,0 +1,109 @@
+# Example values for unifi-controller chart
+# This example shows how to configure the chart with MongoDB 8
+
+image:
+  repository: linuxserver/unifi-network-application
+  pullPolicy: IfNotPresent
+  tag: ""  # Will use Chart.AppVersion if empty
+
+replicaCount: 1
+
+# MongoDB configuration
+mongodb:
+  enabled: true
+  image:
+    repository: mongo
+    tag: "8.0"
+    pullPolicy: IfNotPresent
+  auth:
+    enabled: true
+    rootUsername: root
+    rootPassword: "your-super-secret-root-password-here"  # CHANGE THIS!
+    username: unifi
+    password: "your-unifi-db-password-here"               # CHANGE THIS!
+    database: unifi
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClass: ""  # Use default storage class
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+
+# UniFi Network Application environment
+environment:
+  timezone: "Europe/Berlin"  # Change to your timezone
+  uid: 1000
+  gid: 1000
+  memLimit: 1920
+  memStartup: 1024
+  # MongoDB connection (automatically configured when mongodb.enabled=true)
+  mongoUser: unifi
+  mongoPass: "your-unifi-db-password-here"  # Must match mongodb.auth.password
+  mongoHost: ""      # Auto-set to <release-name>-mongodb when mongodb.enabled=true
+  mongoPort: 27017
+  mongoDbName: unifi
+  mongoAuthSource: admin
+  mongoTls: ""       # Set to "true" to enable TLS
+
+# Service configuration
+service:
+  type: "LoadBalancer"
+  annotations: {}
+  ports:
+    devicecom: 8080
+    webapi: 8443
+  appDiscovery: false
+  syslogCapture: false
+  loadBalancerIP: ""  # Set this to a specific IP if needed
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: ""
+  annotations:
+    # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  hosts:
+    - host: unifi.example.com  # Change this to your domain
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: unifi-tls
+      hosts:
+        - unifi.example.com
+
+# UniFi data persistence
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce 
+  size: 8Gi 
+  storageClass: ""  # Use default storage class
+  annotations: {}
+  backup:
+    enabled: true
+    accessMode: ReadWriteOnce 
+    size: 8Gi 
+    storageClass: ""
+    annotations: {}
+
+# Resource limits
+resources: 
+  limits:
+    cpu: 500m
+    memory: 2Gi
+  requests:
+    cpu: 250m
+    memory: 1Gi
+
+# Node selection
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {} 

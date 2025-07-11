@@ -43,6 +43,47 @@ spec:
             value: "{{ .Values.environment.memLimit }}"
           - name: MEM_STARTUP
             value: "{{ .Values.environment.memStartup }}"
+          {{- if .Values.mongodb.enabled }}
+          - name: MONGO_USER
+            value: {{ .Values.environment.mongoUser | default .Values.mongodb.auth.username }}
+          - name: MONGO_PASS
+            value: {{ .Values.environment.mongoPass | default .Values.mongodb.auth.password }}
+          - name: MONGO_HOST
+            value: {{ .Values.environment.mongoHost | default (printf "%s-mongodb" (include "unifi.fullname" .)) }}
+          - name: MONGO_PORT
+            value: "{{ .Values.environment.mongoPort }}"
+          - name: MONGO_DBNAME
+            value: {{ .Values.environment.mongoDbName | default .Values.mongodb.auth.database }}
+          - name: MONGO_AUTHSOURCE
+            value: {{ .Values.environment.mongoAuthSource }}
+          {{- if .Values.environment.mongoTls }}
+          - name: MONGO_TLS
+            value: {{ .Values.environment.mongoTls }}
+          {{- end }}
+          {{- else }}
+          {{- if .Values.environment.mongoUser }}
+          - name: MONGO_USER
+            value: {{ .Values.environment.mongoUser }}
+          {{- end }}
+          {{- if .Values.environment.mongoPass }}
+          - name: MONGO_PASS
+            value: {{ .Values.environment.mongoPass }}
+          {{- end }}
+          {{- if .Values.environment.mongoHost }}
+          - name: MONGO_HOST
+            value: {{ .Values.environment.mongoHost }}
+          {{- end }}
+          - name: MONGO_PORT
+            value: "{{ .Values.environment.mongoPort }}"
+          - name: MONGO_DBNAME
+            value: {{ .Values.environment.mongoDbName }}
+          - name: MONGO_AUTHSOURCE
+            value: {{ .Values.environment.mongoAuthSource }}
+          {{- if .Values.environment.mongoTls }}
+          - name: MONGO_TLS
+            value: {{ .Values.environment.mongoTls }}
+          {{- end }}
+          {{- end }}
           ports:
           - containerPort: 8080
             protocol: TCP
