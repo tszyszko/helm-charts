@@ -1,5 +1,6 @@
 # UniFi Network Application Helm Chart
 
+
 The UniFi Network Application helm chart installs a UniFi Network Application (formerly UniFi Controller) with MongoDB 8 onto your Kubernetes cluster. A Kubernetes cluster (k3s, kind, K8s, or anything else) is required. For exposing the ports, MetalLB or any other LoadBalancer implementation is required.
 
 ## ⚠️ Breaking Changes in v3.0.0
