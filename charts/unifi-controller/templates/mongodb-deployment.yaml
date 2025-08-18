@@ -11,12 +11,10 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "unifi.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: mongodb
   template:
     metadata:
       labels:
-        {{- include "unifi.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: mongodb
     spec:
       containers:
