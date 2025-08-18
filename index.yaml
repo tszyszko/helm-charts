@@ -64,6 +64,46 @@ entries:
             - linux/arm64
     apiVersion: v2
     appVersion: 9.2.87
+    created: "2025-08-18T12:57:48.71352261Z"
+    description: A Helm Chart for deploying a UniFi Network Application to Kubernetes
+      with MongoDB 8
+    digest: 3b2bfd6d442337d40b64635a3d48e8f28d25829cb4e332261bee81cd483e13cb
+    home: https://github.com/Qonstrukt/helm-charts/tree/main/charts/unifi-controller
+    icon: https://assets-global.website-files.net/622b70d8906c7ab0c03f77f8/63b40a92093c6b2f3767e4e6_tMCv8T-y_400x400.png
+    keywords:
+    - unifi
+    - controller
+    - network-application
+    - ubiquiti
+    - mongodb
+    maintainers:
+    - email: stefan@qonstrukt.nl
+      name: Stefan Moonen
+      url: https://qonstrukt.nl
+    name: unifi-controller
+    type: application
+    urls:
+    - https://github.com/tszyszko/helm-charts/releases/download/unifi-controller-3.0.1/unifi-controller-3.0.1.tgz
+    version: 3.0.1
+  - annotations:
+      artifacthub.io/changes: |
+        - Migrate from deprecated linuxserver/unifi-controller to linuxserver/unifi-network-application
+        - Add MongoDB 8 support as external database
+        - Update environment variables for new image
+        - Breaking change: requires external MongoDB database
+      artifacthub.io/images: |
+        - name: unifi-network-application
+          image: linuxserver/unifi-network-application:9.2.87
+          platforms:
+            - linux/amd64
+            - linux/arm64
+        - name: mongodb
+          image: mongo:8.0
+          platforms:
+            - linux/amd64
+            - linux/arm64
+    apiVersion: v2
+    appVersion: 9.2.87
     created: "2025-07-11T17:06:35.909957648Z"
     description: A Helm Chart for deploying a UniFi Network Application to Kubernetes
       with MongoDB 8
@@ -85,4 +125,4 @@ entries:
     urls:
     - https://github.com/tszyszko/helm-charts/releases/download/unifi-controller-3.0.0/unifi-controller-3.0.0.tgz
     version: 3.0.0
-generated: "2025-07-11T17:06:35.909963559Z"
+generated: "2025-08-18T12:57:48.713530775Z"
